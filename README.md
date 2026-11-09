@@ -5,12 +5,12 @@ Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves 
 
 ## Group index
 
-- Group and tutorial: [complete]
-- Member names, GitHub usernames and UG/PG cohorts: [complete]
-- Shared repository URL: [complete]
-- Latest completed stage: [complete]
-- Verified code SHA: [complete]
-- Test command, working directory and observed result: [complete]
+- Group and tutorial: Solo Group Tutorial Tuesday 5:30pm
+- Member names, GitHub usernames and UG/PG cohorts: Hunter Taylor - AmpharosHunter (Github) and I am UG
+- Shared repository URL: https://github.com/HunterAmpharos/st1-assignment-3
+- Latest completed stage: Stage 6
+- Verified code SHA: 7643dbd8e55d44fcd06b4f7c1e2c2942a6e14307
+- Test command, working directory and observed result: Working
 - Final submitted SHA, if different from tested code SHA: [complete; explain evidence-only changes]
 
 Do not put student IDs, private peer ratings, credentials or personal contact details here.
