@@ -1,6 +1,13 @@
 from smartcare.data_store import SmartCareDataStore
 from smartcare.services import PatientService
 from smartcare.services import PractitionerService
+from datetime import datetime
+from smartcare.domain import AppointmentStatus
+from smartcare.services import (
+    AppointmentService,
+    PatientService,
+    PractitionerService,
+)
 import pytest
 
 #PATIENT ID SEARCH
@@ -48,7 +55,7 @@ def test_find_patient_invalid_id_raises_value_error(bad_id):
     with pytest.raises(ValueError):
         patients.find_patient(bad_id)
 
-#PRACTITONER
+#PRACTITONER ID SEARCH
 #first test here checks if a practitioner can be found via their ID
 def test_find_practitioner_returns_the_registered_practitioner():
     store = SmartCareDataStore()
@@ -92,3 +99,55 @@ def test_find_practitioner_invalid_id_raises_value_error(bad_id):
 
     with pytest.raises(ValueError):
         practitioners.find_practitioner(bad_id)
+
+#APPOINTMENT CANCELLATION
+WHEN = datetime(2026, 10, 1, 9, 0)
+
+#creates a store that has 1 patient, 1 practitoner and 1 appointment (A1)
+#each future test for appointment cancellation calls this particular booking
+def make_booked():
+    store = SmartCareDataStore()
+    patients = PatientService(store)
+    practitioners = PractitionerService(store)
+    appointments = AppointmentService(store)
+    patients.register_patient('P1', 'Alex Example')
+    practitioners.register_practitioner('D1', 'Taylor Example', 'General')
+    appointment = appointments.book_appointment('A1', 'P1', 'D1', WHEN)
+    return store, appointments, appointment
+
+#cancels the appointment and sets its status to CANCELLED while also returning the same object
+def test_cancel_sets_cancelled_and_returns_same_object():
+    store, appointments, appointment = make_booked()
+    result = appointments.cancel_appointment('A1')
+    assert result is appointment
+    assert result.status is AppointmentStatus.CANCELLED
+
+#checks that the appointment can still be found even after the appointment has been cancelled
+def test_cancelled_appointment_is_retained():
+    store, appointments, appointment = make_booked()
+    appointments.cancel_appointment('A1')
+    assert appointments.find_appointment('A1') is appointment
+    assert store.list_appointments() == [appointment]
+
+#if ID is invalid then it will raise a LookupError
+def test_cancel_unknown_id_raises_lookup_error():
+    store, appointments, appointment = make_booked()
+    with pytest.raises(LookupError):
+        appointments.cancel_appointment('A999')
+    assert appointment.status is AppointmentStatus.SCHEDULED
+
+#checks blank and non-text IDs and raises a ValueError if they are present
+@pytest.mark.parametrize('bad_id', ['', '   ', None, 7])
+def test_cancel_invalid_id_raises_value_error(bad_id):
+    store, appointments, appointment = make_booked()
+    with pytest.raises(ValueError):
+        appointments.cancel_appointment(bad_id)
+    assert appointment.status is AppointmentStatus.SCHEDULED
+
+#an already cancelled appointment should not be cancelled again
+def test_cancelling_twice_is_rejected_and_state_unchanged():
+    store, appointments, appointment = make_booked()
+    appointments.cancel_appointment('A1')
+    with pytest.raises(ValueError):
+        appointments.cancel_appointment('A1')
+    assert appointment.status is AppointmentStatus.CANCELLED
