@@ -319,3 +319,99 @@ def test_find_appointment_unknown_id_raises_lookup_error():
     _, _, _, appointments = make_services()
     with pytest.raises(LookupError):
         appointments.find_appointment('A999')
+
+#Stage 9 service listing tests (QRY-04)
+
+def make_listing_session():
+    store, patients, practitioners, appointments = make_services()
+    patients.register_patient('P1', 'Alex Example')
+    patients.register_patient('P2', 'Sam Example')
+    practitioners.register_practitioner('D1', 'Taylor Example', 'General')
+    practitioners.register_practitioner('D2', 'Jordan Example', 'Dental')
+    a1 = appointments.book_appointment(
+        'A1', 'P1', 'D1', datetime(2026, 10, 1, 10, 0),
+    )
+    a2 = appointments.book_appointment(
+        'A2', 'P2', 'D1', datetime(2026, 10, 1, 9, 0),
+    )
+    b1 = appointments.book_appointment('B1', 'P1', 'D2', WHEN)
+    return store, appointments, a1, a2, b1
+
+
+#QRY-04: the service returns only this practitioner's appointments
+def test_list_returns_only_that_practitioners_appointments_in_order():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    result = appointments.list_practitioner_appointments('D1')
+    assert result == [a2, a1]
+    assert result[0] is a2 and result[1] is a1
+
+
+#a cancelled appointment is still listed by default
+def test_list_default_includes_cancelled_appointments():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    appointments.cancel_appointment('A1')
+    result = appointments.list_practitioner_appointments('D1')
+    assert result == [a2, a1]
+    assert a1.status is AppointmentStatus.CANCELLED
+
+
+#a status filter keeps only that status
+def test_list_filters_by_status():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    appointments.cancel_appointment('A1')
+    scheduled = appointments.list_practitioner_appointments(
+        'D1', AppointmentStatus.SCHEDULED,
+    )
+    cancelled = appointments.list_practitioner_appointments(
+        'D1', AppointmentStatus.CANCELLED,
+    )
+    assert scheduled == [a2]
+    assert cancelled == [a1]
+
+
+#a known practitioner with no matches should give an empty list instead of an error
+def test_list_known_practitioner_with_no_matches_returns_empty_list():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    result = appointments.list_practitioner_appointments(
+        'D2', AppointmentStatus.CANCELLED,
+    )
+    assert result == []
+
+
+def test_list_practitioner_without_appointments_returns_empty_list():
+    store, patients, practitioners, appointments = make_services()
+    practitioners.register_practitioner('D1', 'Taylor Example', 'General')
+    assert appointments.list_practitioner_appointments('D1') == []
+
+
+#an unknown practitioner raises LookupError
+def test_list_unknown_practitioner_raises_lookup_error():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    with pytest.raises(LookupError):
+        appointments.list_practitioner_appointments('D999')
+
+
+#a blank or non-text practitioner ID raises ValueError
+@pytest.mark.parametrize('bad_id', ['', '   ', None, 5])
+def test_list_invalid_practitioner_id_raises_value_error(bad_id):
+    store, appointments, a1, a2, b1 = make_listing_session()
+    with pytest.raises(ValueError):
+        appointments.list_practitioner_appointments(bad_id)
+
+
+#a status that is not an AppointmentStatus (and also not NONE) should raise ValueError
+@pytest.mark.parametrize('bad_status', ['scheduled', 'CANCELLED', 7])
+def test_list_invalid_status_raises_value_error(bad_status):
+    store, appointments, a1, a2, b1 = make_listing_session()
+    with pytest.raises(ValueError):
+        appointments.list_practitioner_appointments('D1', bad_status)
+
+
+#listing is a read-only query
+def test_list_does_not_change_the_store_or_appointments():
+    store, appointments, a1, a2, b1 = make_listing_session()
+    before = list(store.list_appointments())
+    statuses = [a.status for a in before]
+    appointments.list_practitioner_appointments('D1')
+    assert store.list_appointments() == before
+    assert [a.status for a in store.list_appointments()] == statuses

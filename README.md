@@ -3,11 +3,13 @@
 One group repository and one evolving SmartCare application.
 Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves the three Stage 6 service tasks incomplete.
 
+DISCLOSURE: I used Claude and Copilot thorughout the assignment to assist with my understanding as well as complete some tasks.
+
 ## Group index
 
-- Group and tutorial: [complete]
-- Member names, GitHub usernames and UG/PG cohorts: [complete]
-- Shared repository URL: [complete]
+- Group and tutorial: Me (Hunter) and Tutorial Tuesday 5:30pm
+- Member names, GitHub usernames and UG/PG cohorts: AmpharosHunter UG
+- Shared repository URL: https://github.com/HunterAmpharos/st1-assignment-3
 - Latest completed stage: [complete]
 - Verified code SHA: [complete]
 - Test command, working directory and observed result: [complete]
