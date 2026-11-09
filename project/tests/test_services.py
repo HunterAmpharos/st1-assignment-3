@@ -165,7 +165,7 @@ def make_services():
     )
 
 
-#T7-11 (FR-01): checks the returned patient is the stored on and its also the only one in store
+#T7-11 (FR-01, AC-01.1): checks the returned patient is the stored on and its also the only one in store
 def test_register_patient_stores_the_patient():
     store, patients, _, _ = make_services()
     patient = patients.register_patient('P1', 'Alex Example')
@@ -212,7 +212,7 @@ def test_registering_invalid_patient_stores_nothing():
     assert store.list_patients() == []
 
 
-#T7-13 (FR-05): same practitioner and exact time conflicts
+#T7-13 (FR-05, AC-04.1): same practitioner and exact time conflicts
 def test_same_practitioner_same_time_conflict_is_rejected():
     store, patients, practitioners, appointments = make_services()
     patients.register_patient('P1', 'Alex Example')
@@ -236,7 +236,7 @@ def test_same_practitioner_one_minute_later_is_allowed():
     assert store.list_appointments() == [first, later]
 
 
-#T7-14 (FR-05): another practitioner at the same time should be allowed
+#T7-14 (FR-05, AC-04.2): another practitioner at the same time should be allowed
 def test_different_practitioner_same_time_is_allowed():
     # Checks: the conflict rule is per practitioner.
     store, patients, practitioners, appointments = make_services()
@@ -263,7 +263,7 @@ def test_cancelled_booking_does_not_block_the_slot():
     assert store.list_appointments() == [first, second]
 
 
-#T7-18 (FR-04): rejected bookings are not saved and the system stays the same
+#T7-18 (FR-04, AC-03.2): rejected bookings are not saved and the system stays the same
 #invalid patient (unregistered)
 def test_booking_unknown_patient_is_rejected_and_nothing_stored():
     store, _, practitioners, appointments = make_services()
@@ -306,7 +306,7 @@ def test_duplicate_appointment_id_is_rejected_and_original_kept():
     assert store.list_appointments() == [original]
 
 
-#T7-19 (FR-08): appointment lookup (a known ID should be "findable")
+#T7-19 (FR-08, AC-06.1): appointment lookup (a known ID should be "findable")
 def test_find_appointment_returns_the_booked_object():
     _, patients, practitioners, appointments = make_services()
     patients.register_patient('P1', 'Alex Example')
