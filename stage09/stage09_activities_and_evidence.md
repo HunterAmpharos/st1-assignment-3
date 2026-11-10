@@ -8,7 +8,7 @@ Stage 8 integrated SHA, command, working directory and actual result: stage 8 wa
 
 I did not complete this. ran out of time.
 
-## A. Tutorial activities
+## A. Tutorial activitiess
 
 ### A1 Session state classification
 
