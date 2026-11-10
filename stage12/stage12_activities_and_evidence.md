@@ -1,24 +1,26 @@
 # Stage 12 activities and evidence
 
+I ran out of time for most of this and decided it would be best to move on and just submit. I apologise for the lack of work that was provided in stage 9 and stage 12
+
 BLANK student response template. Supplied from the beginning in stage12/ in your EXISTING repository; complete it only when you reach Stage 12 after the previous applicable stage is integrated, verified and recorded; preserve project/, tests, earlier records and Git history. UG/common and PG/extended scope must be explicit. Use concise results and versioned links, not copied logs or source. No staff answers or fabricated approvals.
 
-Group/tutorial: [response]
-Members and UG/PG applicability: [response]
+Group/tutorial: Me and Tuesday 5:30pm
+Members and UG/PG applicability: UG
 
 
 ## A Release scope and starting SHA
 
-Release label/version and requirements baseline: [response]
-Common starting SHA / branch / applicable members: [response]
-PG starting SHA / branch / applicable members or not applicable: [response]
-Working-state review and approved integration: [response]
-Protected common candidate and PG differences: [response]
-Feature freeze / owner / verifier: [response]
+Release label/version and requirements baseline: SmartCare-release.zip
+Common starting SHA / branch / applicable members: 1d869ece56e51ab9659871095ce5fd9465b9ec84
+PG starting SHA / branch / applicable members or not applicable: not applicable
+Working-state review and approved integration: git status and git diff
+Protected common candidate and PG differences: not applicable
+Feature freeze / owner / verifier: no new features after stage 9 merge
 
 
 ## B Requirements and release readiness matrix
 
-Tutorial activity 1: All tests pass, README setup is incomplete, one dependency is unreviewed and a known limitation is undocumented. Decide Release / Release with conditions / Do not release and justify: [response]
+Tutorial activity 1: All tests pass, README setup is incomplete, one dependency is unreviewed and a known limitation is undocumented. Decide Release / Release with conditions / Do not release and justify: Do not release and justify
 
 Tutorial activity 2 and actual readiness matrix. Add exact requirement/acceptance IDs, evidence and reviewer; distinguish common/PG applicability.
 
@@ -166,7 +168,7 @@ Common decision / PG decision where different: [response]
 
 Exact common tested SHA: [response]
 Exact PG tested SHA or not applicable: [response]
-Final submitted SHA / repository URL: [response]
+Final submitted SHA / repository URL: 1d869ece56e51ab9659871095ce5fd9465b9ec84
 Evidence-only later commit and difference explanation: [response]
 Executable changes after testing and re-verification: [response]
 Source ZIP name / SHA correspondence / extracted comparison: [response]
